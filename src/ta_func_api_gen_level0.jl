@@ -61,7 +61,7 @@ function generate_ta_func_raw(d::OrderedDict{Symbol,Any}, symb_func::Symbol)
     ctypes = join(ctypes, ", ")
 
     funcname = "_TA_" * string(symb_func)
-    c_funcname = "TA_" * string(symb_func)
+    c_funcname = "DLL_TA_" * string(symb_func)
     ret_typ = "TA_RetCode"
     s = "
 

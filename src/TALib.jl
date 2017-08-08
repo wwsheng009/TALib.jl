@@ -3,12 +3,14 @@ module TALib
 using DataStructures
 
 pkg_name = "TALib"
-depsjl = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
+depsjl = joinpath(dirname(@__FILE__), "..", "deps", "build.jl")
 println(depsjl)
+
+const libta_lib = "libta_lib.dll"
 if isfile(depsjl)
-    include(depsjl)
+    #include(depsjl)
 else
-    error("$pkg_name not properly installed. Please run Pkg.build(\"$pkg_name\")")
+    #error("$pkg_name not properly installed. Please run Pkg.build(\"$pkg_name\")")
 end
 
 include("constants.jl")
@@ -32,7 +34,7 @@ end
 
 for f in [:GetVersionString, :GetVersionMajor, :GetVersionMinor, :GetVersionBuild, :GetVersionDate, :GetVersionTime]
     f_str = string(f)
-    f_ta_str = "TA_" * f_str
+    f_ta_str = "DLL_TA_" * f_str
     @eval begin
         function ($f)()
             unsafe_string(ccall(($f_ta_str, libta_lib), Cstring, ()))
@@ -49,7 +51,7 @@ end
 
 for f in [:Initialize, :Shutdown]
     f_str = string(f)
-    f_ta_str = "TA_" * f_str
+    f_ta_str = "DLL_TA_" * f_str
     @eval begin
         function ($f)()
             ta_func = () -> ccall( ($f_ta_str, libta_lib), TA_RetCode, ())
